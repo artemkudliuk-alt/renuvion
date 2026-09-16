@@ -29,6 +29,17 @@ function UtilityBar() {
 
         <div className="at-device-center flex items-center gap-[18px]">
           <a
+            href="mailto:lamb@lanmedica.com.ua"
+            className="flex items-center gap-2 text-[length:var(--fs-small)] text-white/80 transition-colors duration-[320ms] ease-[var(--ease)] hover:text-white"
+          >
+            <svg viewBox="0 0 24 24" className="size-3.5 shrink-0 text-[var(--accent)]" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+              <rect x="3" y="5" width="18" height="14" rx="2" />
+              <path d="m3 7 9 6 9-6" strokeLinejoin="round" />
+            </svg>
+            <span className="whitespace-nowrap">lamb@lanmedica.com.ua</span>
+          </a>
+          <span className="h-[14px] w-px bg-white/20" aria-hidden />
+          <a
             href={PHONE_HREF}
             className="flex items-center gap-2 text-[length:var(--fs-small)] text-white/85 transition-colors duration-[320ms] ease-[var(--ease)] hover:text-white"
           >

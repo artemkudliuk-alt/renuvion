@@ -106,13 +106,36 @@ export function MobileMenu({ anchors }: Props) {
               <div className="flex flex-col gap-3">
                 <a
                   href={PHONE_HREF}
-                  className="flex items-center gap-3 text-[20px] font-medium text-white transition-colors duration-300 hover:text-[var(--accent)]"
+                  className="flex items-center gap-3 text-[19px] font-medium text-white transition-colors duration-300 hover:text-[var(--accent)]"
                 >
-                  <span className="flex size-8 items-center justify-center rounded-full border border-white/20 bg-white/5">
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/5">
                     <Image src="/svg/icon-phone.svg" alt="" width={16} height={16} unoptimized aria-hidden />
                   </span>
                   <span>{PHONE}</span>
                 </a>
+
+                <a
+                  href="mailto:lamb@lanmedica.com.ua"
+                  className="flex items-center gap-3 text-[16px] font-normal text-white/85 transition-colors duration-300 hover:text-[var(--accent)]"
+                >
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/5 text-[var(--accent)]">
+                    <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+                      <rect x="3" y="5" width="18" height="14" rx="2" />
+                      <path d="m3 7 9 6 9-6" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                  <span>lamb@lanmedica.com.ua</span>
+                </a>
+
+                <address className="not-italic flex items-start gap-3 text-[14px] leading-snug text-white/60">
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/5 text-[var(--accent)]">
+                    <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+                      <path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11Z" strokeLinejoin="round" />
+                      <circle cx="12" cy="10" r="2.5" />
+                    </svg>
+                  </span>
+                  <span>вул. Менделєєва, буд.&nbsp;12, оф.&nbsp;94/1, м.&nbsp;Київ, 01103</span>
+                </address>
 
                 <div className="flex items-center gap-2">
                   {MESSENGERS.map((m) => (

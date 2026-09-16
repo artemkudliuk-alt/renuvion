@@ -37,7 +37,22 @@ const JSON_LD = {
       url: SITE,
       logo: `${SITE}/svg/renuvion-logo.svg`,
       telephone: "+380503584109",
-      contactPoint: { "@type": "ContactPoint", telephone: "+380503584109", contactType: "sales", areaServed: "UA", availableLanguage: "uk" },
+      email: "lamb@lanmedica.com.ua",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "вул. Менделєєва, буд. 12, оф. 94/1",
+        addressLocality: "Київ",
+        postalCode: "01103",
+        addressCountry: "UA",
+      },
+      contactPoint: {
+        "@type": "ContactPoint",
+        telephone: "+380503584109",
+        email: "lamb@lanmedica.com.ua",
+        contactType: "sales",
+        areaServed: "UA",
+        availableLanguage: "uk",
+      },
     },
     {
       "@type": "MedicalDevice",

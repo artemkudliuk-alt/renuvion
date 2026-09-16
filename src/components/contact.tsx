@@ -60,12 +60,31 @@ export function Contact() {
             ))}
           </ul>
 
-          <a
-            href="tel:+380503584109"
-            className="text-[length:var(--fs-h3)] leading-[1.05] tracking-[-0.02em] text-white transition-colors duration-[320ms] hover:text-[var(--accent)]"
-          >
-            +380&nbsp;50&nbsp;358&nbsp;41&nbsp;09
-          </a>
+          <div className="flex flex-col gap-3">
+            <a
+              href="tel:+380503584109"
+              className="text-[length:var(--fs-h3)] font-medium leading-[1.05] tracking-[-0.02em] text-white transition-colors duration-[320ms] hover:text-[var(--accent)]"
+            >
+              +380&nbsp;50&nbsp;358&nbsp;41&nbsp;09
+            </a>
+            <a
+              href="mailto:lamb@lanmedica.com.ua"
+              className="flex items-center gap-2.5 text-[length:var(--fs-lead)] font-normal text-white/85 transition-colors duration-[320ms] hover:text-[var(--accent)]"
+            >
+              <svg viewBox="0 0 24 24" className="size-5 shrink-0 text-[var(--accent)]" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+                <rect x="3" y="5" width="18" height="14" rx="2" />
+                <path d="m3 7 9 6 9-6" strokeLinejoin="round" />
+              </svg>
+              lamb@lanmedica.com.ua
+            </a>
+            <address className="not-italic flex items-start gap-2.5 text-[length:var(--fs-body)] leading-[1.4] text-white/70">
+              <svg viewBox="0 0 24 24" className="mt-0.5 size-5 shrink-0 text-[var(--accent)]" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+                <path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11Z" strokeLinejoin="round" />
+                <circle cx="12" cy="10" r="2.5" />
+              </svg>
+              <span>вул. Менделєєва, буд.&nbsp;12, оф.&nbsp;94/1, м.&nbsp;Київ, 01103</span>
+            </address>
+          </div>
 
           <div className="flex flex-wrap gap-[10px]">
             {MESSENGERS.map((m) => (
