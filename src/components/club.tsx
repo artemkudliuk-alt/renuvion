@@ -4,17 +4,17 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 
 const SURGEONS = [
-  { name: "Д-р Альфредо Ойос", note: "Колумбія — піонер High Definition скульптурування тіла", img: "/screens/s11-hoyos-v2.jpg" },
-  { name: "Д-р Жорді Мір Батлле", note: "Іспанія", img: "/screens/s11-mir-v2.jpg" },
+  { name: "Д-р Альфредо Ойос", note: "Колумбія — піонер High Definition скульптурування тіла", img: "/screens/s11-hoyos-v3.jpg" },
+  { name: "Д-р Жорді Мір Батлле", note: "Іспанія", img: "/screens/s11-mir-v3.jpg" },
   {
     name: "Д-р Едвард М. Ціммерман",
     note: "США — президент American Board of Laser Surgery",
-    img: "/screens/s11-zimmerman-v2.jpg",
+    img: "/screens/s11-zimmerman-v3.jpg",
   },
-  { name: "Д-р Сергій Дербак", note: "Україна — пластичний реконструктивний хірург", img: "/screens/s11-derbak-v2.jpg" },
-  { name: "Д-р Олександр Бебих", note: "Україна", img: "/screens/s11-bebykh-v2.jpg" },
-  { name: "Д-р Ганна Бродська", note: "Україна", img: "/screens/s11-brodska-v2.jpg" },
-  { name: "Д-р Віктор Чепесюк", note: "Україна", img: "/screens/s11-chepesiuk-v2.jpg" },
+  { name: "Д-р Сергій Дербак", note: "Україна — пластичний реконструктивний хірург", img: "/screens/s11-derbak-v3.jpg" },
+  { name: "Д-р Олександр Бебих", note: "Україна", img: "/screens/s11-bebykh-v3.jpg" },
+  { name: "Д-р Ганна Бродська", note: "Україна", img: "/screens/s11-brodska-v3.jpg" },
+  { name: "Д-р Віктор Чепесюк", note: "Україна", img: "/screens/s11-chepesiuk-v3.jpg" },
 ];
 
 const BULLETS = [
