@@ -139,7 +139,6 @@ export function Studies() {
 
         <div
           ref={track}
-          data-lenis-prevent
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}

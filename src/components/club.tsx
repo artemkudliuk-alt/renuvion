@@ -103,7 +103,6 @@ export function Club() {
       {/* Лента портретов — во всю ширину окна, чтобы карточки уходили за край */}
       <div
         ref={track}
-        data-lenis-prevent
         onScroll={onScroll}
         data-rv="stagger"
         className="swipe-row mt-[clamp(16px,2vw,28px)] [margin-inline:0] [--step:90ms] lg:gap-[clamp(16px,1.7vw,24px)]"

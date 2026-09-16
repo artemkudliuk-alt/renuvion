@@ -134,7 +134,6 @@ export function SevenReasons() {
 
         <div
           ref={swipeRef}
-          data-lenis-prevent
           onScroll={handleScroll}
           data-rv
           className="swipe-row mt-8 [--d:120ms] sm:hidden"

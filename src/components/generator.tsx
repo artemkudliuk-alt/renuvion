@@ -366,7 +366,6 @@ export function Generator() {
           {/* Интерактивная лента карточек деталей */}
           <div
             ref={swipeRowRef}
-            data-lenis-prevent
             onScroll={handleScroll}
             className="swipe-row mt-6"
           >

@@ -210,7 +210,6 @@ export function ProblemSolution() {
           <div className="flex min-w-0 max-w-full flex-col gap-4 lg:hidden">
             <div
               ref={swipeContainerRef}
-              data-lenis-prevent
               onPointerDown={handlePointerDown}
               onPointerMove={handlePointerMove}
               onPointerUp={handlePointerUp}

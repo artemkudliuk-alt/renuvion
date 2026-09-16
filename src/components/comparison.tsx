@@ -135,7 +135,6 @@ export function Comparison() {
           </div>
           <div
             ref={swipeRef}
-            data-lenis-prevent
             onScroll={handleScroll}
             className="swipe-row"
           >

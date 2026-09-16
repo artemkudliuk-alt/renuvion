@@ -122,7 +122,6 @@ export function Liposuction() {
         {/* Шаги: на компьютере три колонки, на телефоне лента */}
         <div
           ref={swipeRef}
-          data-lenis-prevent
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}

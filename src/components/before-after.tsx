@@ -174,7 +174,6 @@ export function BeforeAfter() {
             <p className="pb-4 text-[length:var(--fs-h3)] leading-[1.1] text-white lg:hidden">Інші кейси</p>
             <div
               ref={swipeRef}
-              data-lenis-prevent
               onScroll={handleCaseScroll}
               className="swipe-row lg:flex-col lg:gap-[clamp(18px,2.2vw,32px)] lg:overflow-visible lg:[margin-inline:0] lg:[padding-inline:0]"
             >
