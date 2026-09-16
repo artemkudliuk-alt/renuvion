@@ -1,69 +1,100 @@
-import Image from "next/image";
+import { Hero } from "@/components/hero";
+import { ProblemSolution } from "@/components/problem-solution";
+import { Technology } from "@/components/technology";
+import { SevenReasons } from "@/components/seven-reasons";
+import { Generator } from "@/components/generator";
+import { Applications } from "@/components/applications";
+import { Liposuction } from "@/components/liposuction";
+import { HowItWorks } from "@/components/how-it-works";
+import { Comparison } from "@/components/comparison";
+import { Calculator } from "@/components/calculator";
+import { Studies } from "@/components/studies";
+import { Club } from "@/components/club";
+import { BeforeAfter } from "@/components/before-after";
+import { Contact } from "@/components/contact";
+import { Footer } from "@/components/footer";
+import { SiteMotion } from "@/components/site-motion";
+import { LeadModal } from "@/components/lead-modal";
+import { MobileCta } from "@/components/mobile-cta";
+import { ScrollChrome } from "@/components/scroll-chrome";
+import { BokehField } from "@/components/bokeh-field";
+import { Preloader } from "@/components/preloader";
+
+const SITE = "https://renuvion.com.ua";
+
+/*
+ * Микроразметка Schema.org из ТЗ (раздел 4): аппарат, дистрибьютор, два ролика.
+ * FAQPage не добавлена — блока частых вопросов на странице нет, а разметка без видимого
+ * контента нарушает правила Google. Адрес и email дистрибьютора появятся, когда их даст клиент.
+ */
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${SITE}/#org`,
+      name: "Renuvion Ukraine",
+      url: SITE,
+      logo: `${SITE}/svg/renuvion-logo.svg`,
+      telephone: "+380503584109",
+      contactPoint: { "@type": "ContactPoint", telephone: "+380503584109", contactType: "sales", areaServed: "UA", availableLanguage: "uk" },
+    },
+    {
+      "@type": "MedicalDevice",
+      name: "Renuvion",
+      description:
+        "Хірургічна система гелієвої плазми та радіочастотної енергії (RF) для контурування тіла і скорочення м’яких тканин.",
+      manufacturer: { "@type": "Organization", name: "Apyx Medical Corporation" },
+      image: `${SITE}/hero/scene.png`,
+    },
+    {
+      "@type": "VideoObject",
+      name: "Принцип роботи Renuvion",
+      description: "Анімація механізму дії гелієвої плазми та RF-енергії Renuvion.",
+      thumbnailUrl: `${SITE}/video/tech-thumb.jpg`,
+      contentUrl: `${SITE}/video/tech-full.mp4`,
+      duration: "PT2M22S",
+      uploadDate: "2026-09-16",
+    },
+    {
+      "@type": "VideoObject",
+      name: "Миттєве скорочення тканин — клінічне відео",
+      description: "Застосування Renuvion на тканинах живота.",
+      thumbnailUrl: `${SITE}/video/clinical.jpg`,
+      contentUrl: `${SITE}/video/clinical.mp4`,
+      duration: "PT26S",
+      uploadDate: "2026-09-16",
+    },
+  ],
+};
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD).replace(/</g, "\\u003c") }} />
+      <BokehField />
+      <main>
+        <Hero />
+        <ProblemSolution />
+        <Technology />
+        <SevenReasons />
+        <Generator />
+        <Applications />
+        <Liposuction />
+        <HowItWorks />
+        <Comparison />
+        <Calculator />
+        <Studies />
+        <Club />
+        <BeforeAfter />
+        <Contact />
       </main>
-    </div>
+      <Footer />
+      <MobileCta />
+      <ScrollChrome />
+      <LeadModal />
+      <SiteMotion />
+      <Preloader />
+    </>
   );
 }

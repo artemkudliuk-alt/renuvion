@@ -1,26 +1,537 @@
 @import "tailwindcss";
 
+/*
+ * Цвета, шрифт и радиусы — из Figma (guCOd8Ef4qOGRMg07ljXSu).
+ * Это палитра проекта, а не вёрстка: вёрстка снесена под ноль 2026-09-15
+ * и собирается заново по экранам.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-deep: #051026;
+  --bg-elevated: #0a1b38;
+  --accent: #00a3e0;
+  --on-accent: #051026;
+  --text: #ffffff;
+  --text-muted: rgb(255 255 255 / 0.72);
+  --text-faint: rgb(255 255 255 / 0.56);
+  --hairline: rgb(255 255 255 / 0.08);
+
+  --radius-card: 20px;
+  --radius-field: 12px;
+  --radius-pill: 999px;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-deep: var(--bg-deep);
+  --color-elevated: var(--bg-elevated);
+  --color-accent: var(--accent);
+  --color-hairline: var(--hairline);
+
+  --font-sans: var(--font-onest);
+
+  --radius-card: var(--radius-card);
+  --radius-field: var(--radius-field);
+  --radius-pill: var(--radius-pill);
+  --ease-brand: var(--ease);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Прелоадер виден только пока идёт загрузка (класс ставит скрипт в <head>) */
+.preloader {
+  display: none;
+}
+html.is-loading .preloader {
+  display: block;
+}
+html.is-loading {
+  overflow: hidden;
+}
+
+@layer base {
+  html {
+    /* якоря не прячутся под закреплённой шапкой */
+    scroll-padding-top: 72px;
+  }
+  @media (min-width: 1024px) {
+    html {
+      scroll-padding-top: 88px;
+    }
+  }
+  html {
+    font-family: var(--font-sans);
+    color-scheme: dark;
+  }
+  body {
+    /* выезды сбоку (data-rv="right") до появления не должны давать горизонтальный скролл */
+    overflow-x: clip;
+    font-size: 19px;
+    line-height: 1.5;
+  }
+  h1,
+  h2,
+  h3 {
+    font-weight: 500;
+    text-wrap: balance;
+    hyphens: none;
+  }
+  p {
+    text-wrap: pretty;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/*
+ * Все свои классы лежат в @layer components. Без слоя они по специфичности равны
+ * утилитам Tailwind, и побеждает та, что ниже в файле: на четвёртом экране
+ * `display: flex` у .swipe-row перебивал `sm:hidden`, и на широком экране показывались
+ * сразу обе версии — лента и сетка.
+ */
+@layer components {
+  /* ---------- Основа страницы ---------- */
+
+  /*
+   * Контейнер. Поля считаются от ширины окна, а не от холста макета:
+   * 20 px на телефоне, плавно до 70 px на большом экране.
+   * Строки от растягивания защищает max-width на самих блоках, а не контейнер.
+   */
+  :root {
+    --pad: clamp(20px, 5.8vw, 110px);
+  }
+
+  .container-site {
+    width: 100%;
+    padding-inline: var(--pad);
+  }
+
+  /*
+   * Опорные точки аппарата на фоне. Кадр прижат вправо, его ширина = min(100vw, 177.78vh).
+   * Внутри кадра аппарат всегда занимает с 60% до 86.5% ширины — замерено по картинке,
+   * сходится на разных окнах. Отсюда обе точки считаются от кадра, а не задаются числом:
+   * меняется окно — они едут вместе с аппаратом.
+   */
+  @media (min-width: 1024px) {
+    :root {
+      --scene-w: min(100vw, 177.78vh);
+      --device-left: calc(100vw - 0.4 * var(--scene-w));
+      --device-center: calc(100vw - 0.27 * var(--scene-w));
+    }
+
+    /*
+     * Левая группа не должна доходить до того, что центрировано по аппарату.
+     * 150 — половина самого широкого такого элемента (кнопка) плюс зазор.
+     */
+    .upto-device {
+      max-width: calc(var(--device-center) - var(--pad) - 168px);
+    }
+  }
+
+  /*
+   * Шкала размеров. Верхняя граница каждого = размер из макета на 1440,
+   * поэтому шире 1440 текст не раздувается, а уже — плавно сжимается.
+   */
+  :root {
+    --fs-h1: clamp(24px, 3.76vw, 54px);
+    --fs-h2: clamp(24px, 3.34vw, 48px);
+    --fs-h3: clamp(20px, 2.3vw, 33px);
+    --fs-display: clamp(56px, 7.8vw, 112px);
+    --fs-num: clamp(38px, 5.3vw, 76px);
+    --fs-lead: clamp(18px, 1.88vw, 27px);
+    --fs-nav: clamp(14px, 1.28vw, 20px);
+    --fs-btn: clamp(17px, 1.53vw, 22px);
+    --fs-body: clamp(15px, 1.18vw, 17px);
+    --fs-label: clamp(12px, 1.18vw, 17px);
+    --fs-small: clamp(14px, 1.25vw, 18px);
+  }
+
+  /*
+   * Збільшена типографіка для мобільних екранів: жодного дрібного шрифту.
+   * Мінімальний базовий текст — 17 px, підписи/бейджі — 15 px, кнопки — 18 px,
+   * заголовки — 26–32 px.
+   */
+  @media (max-width: 1023px) {
+    :root {
+      --fs-h1: clamp(20px, 5.6vw, 25px);
+      --fs-h2: clamp(26px, 7vw, 38px);
+      --fs-h3: clamp(22px, 5.6vw, 28px);
+      --fs-display: clamp(64px, 16vw, 96px);
+      --fs-num: clamp(42px, 10.5vw, 68px);
+      --fs-lead: clamp(19px, 4.8vw, 23px);
+      --fs-nav: clamp(17px, 4.4vw, 20px);
+      --fs-btn: clamp(18px, 4.6vw, 20px);
+      --fs-body: clamp(17px, 4.2vw, 18px);
+      --fs-label: clamp(15px, 3.8vw, 16px);
+      --fs-small: clamp(15px, 3.8vw, 17px);
+    }
+  }
+
+  /* ---------- Ссылки и кнопки ---------- */
+
+  /* подчёркивание вырастает слева, а не появляется целиком */
+  .u-link {
+    position: relative;
+    transition: color 320ms var(--ease);
+  }
+  .u-link::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: -4px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 420ms var(--ease);
+  }
+  .u-link:hover::after,
+  .u-link:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  /* слои ховера с разными длительностями — одинаковые читаются как шаблон */
+  .btn {
+    position: relative;
+    isolation: isolate;
+    transition:
+      translate 620ms var(--ease),
+      box-shadow 620ms var(--ease);
+  }
+  .btn:hover {
+    translate: 0 -2px;
+  }
+  .btn svg,
+  .btn img {
+    transition: translate 520ms var(--ease);
+  }
+  .btn:hover svg,
+  .btn:hover img {
+    translate: 3px 0;
+  }
+
+  :where(a, button, input, [tabindex]):focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Первый экран: левый край кадра уходит в фон страницы без видимой границы */
+  @media (min-width: 1024px) {
+    /*
+     * Кадр растворяется со всех сторон: он не совпадает с границами секции,
+     * и без этого его края читаются прямыми линиями — особенно верхний.
+     * Префиксы обязательны: без -webkit-mask-composite маска в WebKit
+     * отваливается целиком, и растворения не видно вовсе.
+     */
+    .hero-scene {
+      -webkit-mask-image:
+        linear-gradient(to right, transparent 0, #000 16%, #000 94%, transparent 100%),
+        linear-gradient(to bottom, transparent 0, #000 14%, #000 86%, transparent 100%);
+      -webkit-mask-composite: source-in;
+      mask-image:
+        linear-gradient(to right, transparent 0, #000 16%, #000 94%, transparent 100%),
+        linear-gradient(to bottom, transparent 0, #000 14%, #000 86%, transparent 100%);
+      mask-composite: intersect;
+    }
+  }
+
+  /* Центрирование по аппарату — ниже .btn, иначе его position: relative перебивает absolute */
+  @media (min-width: 1024px) {
+    /* элемент встаёт серединой ровно на середину аппарата */
+    .at-device-center {
+      position: absolute;
+      left: var(--device-center);
+      translate: -50% 0;
+    }
+
+    /*
+     * Подъём на ховере задаётся тем же свойством translate, что и центрирование,
+     * и перезаписывал его целиком — кнопка прыгала вправо на половину ширины.
+     * Для центрированных кнопок держим обе части в одном значении.
+     */
+    .btn.at-device-center:hover,
+    .btn.at-device-center:focus-visible {
+      translate: -50% -2px;
+    }
+
+  }
+
+  /* ---------- Секции ---------- */
+
+  /*
+   * Вертикальный ритм один на весь сайт. Значение половинное, потому что на стыке
+   * двух секций отступы складываются: нижний одной плюс верхний следующей.
+   */
+  .section {
+    padding-block: clamp(28px, 3.5vw, 60px);
+  }
+
+  /*
+   * Шапка секции: заголовок слева, лид справа. Раньше каждая секция городила свой
+   * flex + max-width, и лид начинался в разном месте — 731, 767, 623, 460.
+   * Теперь доля колонок одна на весь сайт, и лиды выстроены по вертикали.
+   */
+  .section-head {
+    display: grid;
+    gap: clamp(16px, 2vw, 32px);
+  }
+  @media (min-width: 1024px) {
+    .section-head {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.52fr);
+      gap: clamp(32px, 5vw, 96px);
+      align-items: start;
+    }
+  }
+
+  /* вуаль поверх фотографии, чтобы текст читался без тёмной плашки */
+  .veil-dark {
+    background: linear-gradient(to bottom, rgb(5 16 38 / 0.15), rgb(5 16 38 / 0.55) 55%, rgb(5 16 38 / 0.92));
+  }
+  .veil-light {
+    background: linear-gradient(to bottom, rgb(243 246 249 / 0), rgb(243 246 249 / 0.55) 55%, rgb(243 246 249 / 0.94));
+  }
+
+  /* края кадра растворяются со всех сторон — под картинкой свой фон */
+  .panel-fade {
+    mask-image:
+      linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%),
+      linear-gradient(to bottom, transparent 0, #000 20%, #000 78%, transparent 100%);
+    mask-composite: intersect;
+  }
+
+  /* лента, которую листают пальцем: на телефоне вместо сетки */
+  .swipe-row {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    width: calc(100% + var(--pad) * 2);
+    max-width: 100vw;
+    min-width: 0;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--pad);
+    margin-inline: calc(-1 * var(--pad));
+    padding-inline: var(--pad);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+    overscroll-behavior-x: contain;
+  }
+  .swipe-row::-webkit-scrollbar {
+    display: none;
+  }
+  .swipe-row > * {
+    scroll-snap-align: start;
+    flex: 0 0 auto;
+  }
+
+  /* смена содержимого на месте: старое ушло, новое приходит снизу с блюром */
+  .anim-swap {
+    animation: rv-swap 520ms var(--ease) both;
+  }
+
+  /* кольцо-радар вокруг кнопки воспроизведения */
+  .pulse-ring::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    border: 1px solid var(--accent);
+    animation: rv-ring 2.6s var(--ease) infinite;
+    pointer-events: none;
+  }
+
+  /* Мягкое мерцание / пульсация значка VS */
+  .vs-breathe {
+    animation: vs-breathe 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes vs-breathe {
+  0%, 100% {
+    box-shadow: 0 0 18px rgb(0 163 224 / 0.5), 0 0 0 0 rgb(0 163 224 / 0.35);
+    border-color: rgb(0 163 224 / 0.7);
+    opacity: 0.92;
+  }
+  50% {
+    box-shadow: 0 0 34px rgb(0 163 224 / 0.95), 0 0 12px 2px rgb(0 163 224 / 0.6);
+    border-color: rgb(0 163 224 / 1);
+    opacity: 1;
+  }
+}
+
+@keyframes rv-swap {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+    filter: blur(8px);
+  }
+}
+@keyframes rv-ring {
+  from {
+    transform: scale(1);
+    opacity: 0.65;
+  }
+  to {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+/* Ползунок калькулятора: дорожка --hairline, заливка --accent до значения */
+@layer components {
+  .calc-range {
+    appearance: none;
+    background: linear-gradient(to right, var(--accent) 0 var(--pct), rgb(255 255 255 / 0.1) var(--pct) 100%) center / 100% 2px
+      no-repeat;
+    cursor: pointer;
+  }
+  .calc-range::-webkit-slider-thumb {
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 0 0 6px rgb(0 163 224 / 0.18);
+    transition: box-shadow 320ms var(--ease);
+  }
+  .calc-range:active::-webkit-slider-thumb {
+    box-shadow: 0 0 0 10px rgb(0 163 224 / 0.28);
+  }
+  .calc-range::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border: 0;
+    border-radius: 999px;
+    background: #fff;
+  }
+}
+
+/* поле с ошибкой коротко вздрагивает */
+@keyframes rv-shake {
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(5px); }
+}
+/* точка внутри радиокнопки появляется масштабом */
+@keyframes rv-pop {
+  from { opacity: 0; transform: scale(0); }
+}
+@layer components {
+  .anim-shake { animation: rv-shake 340ms var(--ease); }
+  .anim-pop { animation: rv-pop 320ms var(--ease) both; }
+}
+
+/*
+ * Плитки FDA. Переход ховера держим здесь, а не утилитой Tailwind:
+ * transition-property из утилиты перебивал переход появления, и плитки
+ * возникали мгновенно, без выезда.
+ */
+@layer components {
+  .fda-tile {
+    transition:
+      border-color 620ms var(--ease),
+      background-color 620ms var(--ease);
+  }
+}
+
+/* ---------- Появление при скролле ---------- */
+/*
+ * Скрытое состояние живёт только под классом .rv, который ставит скрипт в <head>.
+ * Без JS и при prefers-reduced-motion страница видна целиком и сразу.
+ */
+@layer components {
+  .rv [data-rv]:not([data-rv^="stagger"]),
+  .rv [data-rv^="stagger"] > * {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+    filter: blur(14px);
+    transition:
+      opacity var(--dur, 900ms) var(--ease) var(--delay),
+      transform var(--dur, 900ms) var(--ease) var(--delay),
+      filter var(--dur, 900ms) var(--ease) var(--delay);
+  }
+  .rv [data-rv^="stagger"] > * {
+    --delay: calc(var(--i, 0) * var(--step, 70ms) + var(--d, 0ms));
+  }
+  .rv [data-rv]:not([data-rv^="stagger"]) {
+    --delay: var(--d, 0ms);
+  }
+
+  /* варианты: :not(.is-in) выравнивает вес с общим правилом выше */
+  .rv [data-rv="left"]:not(.is-in) {
+    transform: translate3d(-40px, 0, 0);
+  }
+  .rv [data-rv="right"]:not(.is-in) {
+    transform: translate3d(40px, 0, 0);
+  }
+  .rv [data-rv="fade"]:not(.is-in) {
+    transform: none;
+  }
+  /* лесенка, выезжающая сбоку: дети идут по очереди слева направо */
+  .rv [data-rv="stagger-left"]:not(.is-in) > * {
+    transform: translate3d(-56px, 0, 0);
+  }
+
+  /* крупный кадр: камера медленно встаёт на место */
+  .rv [data-rv="scene"]:not(.is-in) {
+    transform: scale(1.05);
+    filter: none;
+  }
+
+  .rv [data-rv].is-in:not([data-rv^="stagger"]),
+  .rv [data-rv^="stagger"].is-in > * {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  /* M4 — линия растёт из точки крепления */
+  .rv [data-draw] {
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 900ms var(--ease) var(--d, 0ms);
+  }
+  .rv [data-draw="y"] {
+    transform: scaleY(0);
+    transform-origin: center top;
+  }
+  /* линия, растущая снизу вверх: от точки-маркера к подписи над ней */
+  .rv [data-draw="y-up"] {
+    transform: scaleY(0);
+    transform-origin: center bottom;
+  }
+  .rv [data-draw].is-in {
+    transform: none;
+  }
+
+  /* контур SVG прочерчивается штрихом — длину ставит скрипт */
+  .rv [data-draw-svg] path {
+    transition: stroke-dashoffset 2200ms var(--ease) var(--d, 0ms);
+  }
+  .rv [data-draw-svg].is-in path {
+    stroke-dashoffset: 0 !important;
+  }
+}
+
+/* Всплывающее окно заявки (lead-modal.tsx): затемнение с размытием, окно приезжает снизу */
+.lead-modal::backdrop {
+  background: rgb(2 8 20 / 0.72);
+  backdrop-filter: blur(8px);
+}
+.lead-modal[open] {
+  animation: lead-modal-in 500ms var(--ease) both;
+}
+.lead-modal[open]::backdrop {
+  animation: lead-backdrop-in 400ms var(--ease) both;
+}
+@keyframes lead-modal-in {
+  from { opacity: 0; transform: translateY(24px) scale(0.98); }
+}
+@keyframes lead-backdrop-in {
+  from { opacity: 0; }
 }
