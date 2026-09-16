@@ -146,7 +146,11 @@ export function SiteMotion() {
     // Прелоадер (preloader.tsx): появления стартуют, когда в буквах открываются окна,
     // прокрутка — после пролёта. Страховка на случай, если прелоадер не отчитался.
     let fallback = 0;
+    let started = false;
     const afterPreloader = () => {
+      if (started) return;
+      started = true;
+      window.clearTimeout(fallback);
       observeAll();
       lenis.scrollTo(0, { immediate: true });
       window.scrollTo(0, 0);
@@ -160,6 +164,7 @@ export function SiteMotion() {
       document.addEventListener("preloader:done", afterPreloader, { once: true });
       fallback = window.setTimeout(afterPreloader, 15000);
     } else {
+      started = true;
       observeAll();
       lenis.scrollTo(0, { immediate: true });
       window.scrollTo(0, 0);

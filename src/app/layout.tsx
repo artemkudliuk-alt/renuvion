@@ -66,7 +66,6 @@ const revealBootstrap = `(function(){
   window.addEventListener('beforeunload', function(){ window.scrollTo(0, 0); });
   window.addEventListener('pagehide', function(){ window.scrollTo(0, 0); });
   window.addEventListener('pageshow', function(){ window.scrollTo(0, 0); });
-  window.addEventListener('load', function(){ window.scrollTo(0, 0); });
 
   var r=document.documentElement;
   if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
