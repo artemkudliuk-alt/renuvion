@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 
 type View = "front" | "back";
@@ -102,10 +102,21 @@ const ROWS: { label: string; value: number }[] = [
   { label: "Груди (жіночі)", value: 27 },
 ];
 
+const DESKTOP = "(min-width: 1024px)";
+const subscribeDesktop = (cb: () => void) => {
+  const mq = matchMedia(DESKTOP);
+  mq.addEventListener("change", cb);
+  return () => mq.removeEventListener("change", cb);
+};
+
 export function Applications() {
   const [view, setView] = useState<View>("front");
-  const [activeId, setActiveId] = useState<string | null>("neck");
+  const [picked, setPicked] = useState<string | null>(null);
   const [turning, setTurning] = useState<View | null>(null);
+  const desktop = useSyncExternalStore(subscribeDesktop, () => matchMedia(DESKTOP).matches, () => false);
+  // Пока зритель ничего не выбрал: на компьютере по макету подсвечена зона по умолчанию (шея / спина),
+  // на телефоне — ничего, подсказывают точки и надпись. Во время разворота фигуры подсветки нет.
+  const activeId = turning ? null : (picked ?? (desktop ? (view === "front" ? "neck" : "back") : null));
   const [touched, setTouched] = useState(false);
 
   const active = ZONES.find((z) => z.id === activeId && z.view === view) ?? null;
@@ -114,7 +125,7 @@ export function Applications() {
   const activeValue = ROWS.find((r) => r.label === activeLabel)?.value ?? null;
 
   const pick = (id: string) => {
-    setActiveId(id);
+    setPicked(id);
     setTouched(true);
   };
 
@@ -131,12 +142,12 @@ export function Applications() {
   const finish = (next: View) => {
     setTurning(null);
     setView(next);
-    setActiveId(next === "front" ? "neck" : "back");
+    setPicked(null);
   };
 
   const switchView = (next: View) => {
     if (next === view || turning) return;
-    setActiveId(null);
+    setPicked(null);
     const clip = turns.current[next];
     // ролик не подгрузился — переключаемся сразу, без разворота
     if (!clip) return finish(next);
@@ -286,7 +297,17 @@ export function Applications() {
               </span>
             )}
 
-            {/* подсказка гаснет после первого касания зоны */}
+            {/* телефон: подсказка сверху по центру, пока ни одна зона не выбрана (потом на её месте — название зоны) */}
+            <span
+              className={`pointer-events-none absolute left-1/2 top-3 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-[var(--radius-pill)] border border-white/14 bg-[rgb(5_18_41/0.72)] py-[6px] pl-3 pr-[14px] transition-opacity duration-[420ms] ease-[var(--ease)] lg:hidden ${
+                active || turning ? "opacity-0" : "opacity-100"
+              }`}
+            >
+              <span className="size-[7px] rounded-full bg-[var(--accent)]" aria-hidden />
+              <span className="text-[14px] text-white/85">Натисніть на частину тіла</span>
+            </span>
+
+            {/* компьютер: подсказка гаснет после первого наведения на зону */}
             <span
               className={`pointer-events-none absolute left-4 top-4 hidden items-center gap-2 rounded-[var(--radius-pill)] border border-white/14 bg-[rgb(5_18_41/0.72)] py-2 pl-[14px] pr-4 transition-opacity duration-[620ms] ease-[var(--ease)] lg:flex ${
                 touched ? "opacity-0" : "opacity-100"
@@ -316,7 +337,6 @@ export function Applications() {
 
           {/* Рейтинг зон */}
           <div data-rv="stagger" className="flex flex-col [--step:55ms]">
-            <p className="mb-3 text-[length:var(--fs-body)] text-white/70 lg:hidden">Натисніть на частину тіла</p>
             {ROWS.map((row) => {
               const on = activeRows.includes(row.label);
               return (
