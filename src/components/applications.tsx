@@ -5,13 +5,15 @@ import Image from "next/image";
 
 type View = "front" | "back";
 
+type Rect = { left: string; top: string; width: string; height: string };
+
 type Zone = {
   id: string;
   view: View;
   /** строки рейтинга, которые загораются вместе с зоной */
   rows: string[];
-  /** область под курсор — доли кадра фигуры */
-  hotspot: { left: string; top: string; width: string; height: string };
+  /** области под курсор — доли кадра фигуры; у рук их две, чтобы не накрывать торс */
+  hotspots: Rect[];
   /** светящаяся накладка поверх фигуры */
   overlay: { src: string; left: string; top: string; width: string; height: string };
   /** точка-указатель на фигуре */
@@ -23,7 +25,7 @@ const ZONES: Zone[] = [
     id: "neck",
     view: "front",
     rows: ["Шия / Підборіддя"],
-    hotspot: { left: "44%", top: "10.5%", width: "11.5%", height: "6.8%" },
+    hotspots: [{ left: "44%", top: "10.5%", width: "11.5%", height: "6.8%" }],
     overlay: { src: "/body/front-neck.png", left: "40.4%", top: "10.8%", width: "19.3%", height: "8.3%" },
     marker: { left: "50%", top: "14%" },
   },
@@ -31,7 +33,10 @@ const ZONES: Zone[] = [
     id: "arms",
     view: "front",
     rows: ["Руки (плече-лікоть)"],
-    hotspot: { left: "29.8%", top: "19.6%", width: "40.4%", height: "17.4%" },
+    hotspots: [
+      { left: "28.5%", top: "19.6%", width: "12%", height: "17.4%" },
+      { left: "59%", top: "19.6%", width: "12%", height: "17.4%" },
+    ],
     overlay: { src: "/body/front-arms.png", left: "24.3%", top: "17.1%", width: "51.1%", height: "37.2%" },
     marker: { left: "30%", top: "30%" },
   },
@@ -39,7 +44,7 @@ const ZONES: Zone[] = [
     id: "chest",
     view: "front",
     rows: ["Груди (чоловічі / гінекомастія)", "Груди (жіночі)"],
-    hotspot: { left: "40.6%", top: "19.1%", width: "18.3%", height: "8%" },
+    hotspots: [{ left: "40.6%", top: "19.1%", width: "18.3%", height: "8%" }],
     overlay: { src: "/body/front-chest.png", left: "36.1%", top: "16.9%", width: "29%", height: "15.1%" },
     marker: { left: "50%", top: "23%" },
   },
@@ -47,7 +52,7 @@ const ZONES: Zone[] = [
     id: "belly",
     view: "front",
     rows: ["Живіт"],
-    hotspot: { left: "41%", top: "27.8%", width: "17.5%", height: "9.1%" },
+    hotspots: [{ left: "41%", top: "27.8%", width: "17.5%", height: "9.1%" }],
     overlay: { src: "/body/front-belly.png", left: "36.5%", top: "27.5%", width: "29%", height: "12.3%" },
     marker: { left: "50%", top: "32%" },
   },
@@ -55,7 +60,7 @@ const ZONES: Zone[] = [
     id: "thighs",
     view: "front",
     rows: ["Стегна"],
-    hotspot: { left: "37%", top: "43%", width: "26%", height: "14%" },
+    hotspots: [{ left: "37%", top: "43%", width: "26%", height: "14%" }],
     overlay: { src: "/body/front-thighs.png", left: "32.7%", top: "41.0%", width: "34.1%", height: "16.6%" },
     marker: { left: "50%", top: "48%" },
   },
@@ -63,7 +68,7 @@ const ZONES: Zone[] = [
     id: "knees",
     view: "front",
     rows: ["Коліна"],
-    hotspot: { left: "41.3%", top: "60.9%", width: "16.7%", height: "5.1%" },
+    hotspots: [{ left: "41.3%", top: "60.9%", width: "16.7%", height: "5.1%" }],
     overlay: { src: "/body/front-knees.png", left: "37.9%", top: "57.3%", width: "23.7%", height: "12.8%" },
     marker: { left: "50%", top: "63%" },
   },
@@ -71,7 +76,7 @@ const ZONES: Zone[] = [
     id: "back",
     view: "back",
     rows: ["Спина"],
-    hotspot: { left: "36%", top: "16%", width: "28%", height: "20%" },
+    hotspots: [{ left: "36%", top: "16%", width: "28%", height: "20%" }],
     overlay: { src: "/body/back-back.png", left: "35.8%", top: "15.6%", width: "28.3%", height: "20%" },
     marker: { left: "50%", top: "25%" },
   },
@@ -79,7 +84,7 @@ const ZONES: Zone[] = [
     id: "glutes",
     view: "back",
     rows: ["Сідниці"],
-    hotspot: { left: "37.5%", top: "34.5%", width: "25%", height: "14%" },
+    hotspots: [{ left: "37.5%", top: "34.5%", width: "25%", height: "14%" }],
     overlay: { src: "/body/back-glutes.png", left: "33.6%", top: "32.4%", width: "32.6%", height: "18.0%" },
     marker: { left: "50%", top: "40%" },
   },
@@ -195,26 +200,64 @@ export function Applications() {
               />
             ))}
 
-            {active && (
-              <span className="pointer-events-none absolute" style={{ ...active.overlay, position: "absolute" }}>
-                <Image src={active.overlay.src} alt="" fill unoptimized sizes="(min-width: 1024px) 34vw, 100vw" className="object-contain" />
-              </span>
-            )}
+            {/*
+              Все накладки вида лежат в DOM заранее и сменяются прозрачностью.
+              Раньше был один элемент с меняющимся src: при смене зоны он секунду показывал
+              прошлый кусок в рамке новой зоны — казалось, что загораются два куска подряд.
+            */}
+            {!turning &&
+              ZONES.filter((z) => z.view === view).map((z) => (
+                <span
+                  key={z.id}
+                  aria-hidden
+                  className="pointer-events-none absolute transition-opacity duration-[420ms] ease-[var(--ease)]"
+                  style={{ ...z.overlay, position: "absolute", opacity: z.id === activeId ? 1 : 0 }}
+                >
+                  <Image src={z.overlay.src} alt="" fill unoptimized sizes="(min-width: 1024px) 34vw, 100vw" className="object-contain" />
+                </span>
+              ))}
 
             {/* области наведения */}
-            {!turning && ZONES.filter((z) => z.view === view).map((z) => (
-              <button
-                key={z.id}
-                type="button"
-                aria-label={z.rows[0]}
-                aria-pressed={z.id === activeId}
-                className="absolute cursor-pointer"
-                style={z.hotspot}
-                onMouseEnter={() => pick(z.id)}
-                onFocus={() => pick(z.id)}
-                onClick={() => pick(z.id)}
-              />
-            ))}
+            {!turning &&
+              ZONES.filter((z) => z.view === view).flatMap((z) =>
+                z.hotspots.map((h, i) => (
+                  <button
+                    key={`${z.id}-${i}`}
+                    type="button"
+                    aria-label={z.rows[0]}
+                    aria-pressed={z.id === activeId}
+                    className="absolute cursor-pointer"
+                    style={h}
+                    onMouseEnter={() => pick(z.id)}
+                    onFocus={() => pick(z.id)}
+                    onClick={() => pick(z.id)}
+                  />
+                )),
+              )}
+
+            {/*
+              Телефон: наведения нет, поэтому точки-подсказки стоят на всех зонах — видно, куда нажимать.
+              Без подписей: описание появляется после нажатия. Точка активной зоны гаснет — зона уже подсвечена.
+            */}
+            {!turning &&
+              ZONES.filter((z) => z.view === view).flatMap((z) =>
+                z.hotspots.map((h, i) => (
+                  <span
+                    key={`dot-${z.id}-${i}`}
+                    aria-hidden
+                    className="pointer-events-none absolute flex size-3 -translate-x-1/2 -translate-y-1/2 items-center justify-center transition-opacity duration-[420ms] ease-[var(--ease)] lg:hidden"
+                    style={{
+                      left: `calc(${h.left} + ${h.width} / 2)`,
+                      top: `calc(${h.top} + ${h.height} / 2)`,
+                      opacity: z.id === activeId ? 0 : 1,
+                      ["--pulse-d" as string]: `${(i + z.id.length) * 160}ms`,
+                    }}
+                  >
+                    <span className="pulse-ring absolute inset-0 rounded-full" />
+                    <span className="size-3 rounded-full border-2 border-white bg-[var(--accent)] shadow-[0_0_10px_rgb(0_163_224/0.9)]" />
+                  </span>
+                )),
+              )}
 
             {/* подпись активной зоны: точка, поводок и плашка */}
             {active && activeValue !== null && (
