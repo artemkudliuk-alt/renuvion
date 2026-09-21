@@ -37,10 +37,11 @@ const REASONS: Reason[] = [
     light: false,
   },
   {
-    img: "/screens/s04-c5.png",
+    img: "/screens/s04-c5.jpg",
     title: "Багатофункціональність",
     text: "Найкращий електрохірургічний коагулятор для операційної.",
-    light: true,
+    // тёмная вуаль: на операционном кадре светлая ложилась туманом
+    light: false,
   },
   {
     img: "/screens/s04-c6.png",
@@ -92,9 +93,9 @@ function Closing() {
   return (
     <div className="flex h-full flex-col justify-end gap-[clamp(10px,1.1vw,16px)] sm:p-[clamp(20px,2.2vw,32px)]">
       <span className="h-px w-12 bg-white/40" aria-hidden />
-      <p className="text-[length:var(--fs-body)] uppercase tracking-[0.18em] text-white/55">Більше, ніж естетика</p>
+      <p className="text-[length:var(--fs-body)] uppercase tracking-[0.18em] text-white/55">Правильний вибір</p>
       <a href="#before-after" className="btn group flex items-center gap-5">
-        <span className="text-[length:var(--fs-h3)] leading-[1.1] text-white">Це впевненість у&nbsp;собі</span>
+        <span className="text-[length:var(--fs-h3)] leading-[1.1] text-white">Без корекції після операції</span>
         <Image src="/svg/arrow-long.svg" alt="" width={36} height={12} unoptimized aria-hidden className="h-3 w-9 shrink-0" />
       </a>
     </div>

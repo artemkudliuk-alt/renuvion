@@ -2,10 +2,20 @@ import Image from "next/image";
 import { SiteHeader } from "./site-header";
 
 const FDA = [
-  { icon: "/svg/fda-lipo.svg", text: "Використання після ліпосакції" },
-  { icon: "/svg/fda-neck.svg", text: "Підтягування шкіри шиї та підборіддя" },
-  { icon: "/svg/fda-thighs.svg", text: "Зменшення целюліту на стегнах і сідницях" },
+  "Єдиний апарат, схвалений FDA для використання після ліпосакції",
+  "Єдиний апарат, схвалений FDA для підтягування провисаючої шкіри на шиї та підборідді",
+  "Єдиний апарат, схвалений FDA для скорочення підшкірних м’яких тканин на всіх ділянках тіла",
 ];
+
+/** зелёная галочка в круге — тот же значок, что в таблице сравнения */
+function Check() {
+  return (
+    <svg viewBox="0 0 24 24" className="size-[clamp(26px,2.2vw,32px)] shrink-0" aria-hidden>
+      <circle cx="12" cy="12" r="11" fill="#34D399" fillOpacity=".14" stroke="#34D399" strokeWidth="1.5" />
+      <path d="m7.5 12.4 3 3 6-6.4" fill="none" stroke="#34D399" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 /**
  * Первый экран.
@@ -62,16 +72,22 @@ export function Hero() {
         <div className="flex flex-1 flex-col justify-center gap-[clamp(14px,2.4vh,32px)] py-[clamp(12px,2.4vh,34px)]">
           <div
             data-rv="stagger"
-            className="relative z-10 flex max-w-[820px] flex-col items-center text-center lg:items-start lg:text-left gap-[clamp(14px,1.7vw,24px)] [--d:260ms] [--step:140ms]"
+            className="relative z-10 flex max-w-[900px] flex-col items-center text-center lg:items-start lg:text-left gap-[clamp(14px,1.7vw,24px)] [--d:260ms] [--step:140ms]"
           >
-            <p className="text-[length:var(--fs-label)] uppercase leading-[1.45] tracking-[0.14em] text-[var(--accent)] lg:leading-[1.8] text-center lg:text-left">
+            {/*
+              Плашка под надзаголовком: заливка без рамки — рамка поверх заливки
+              читается как элемент интерфейса, а не как акцент в наборе.
+              Скруглени небольшое, форма остаётся близкой к прямоугольной.
+            */}
+            <p className="inline-flex rounded-[10px] bg-[rgb(1_6_16/0.86)] px-[clamp(12px,1.1vw,18px)] py-[clamp(7px,0.6vw,10px)] text-[length:var(--fs-label)] uppercase leading-[1.45] tracking-[0.14em] text-[var(--accent)] backdrop-blur-[10px] text-center lg:text-left lg:leading-[1.5]">
               Технологія експертного рівня для контурування тіла
             </p>
 
-            <h1 className="text-[length:var(--fs-h1)] font-medium leading-[1.18] tracking-[-0.03em] text-[var(--text)] text-center lg:text-left lg:leading-[0.9] lg:tracking-[-0.032em]">
-              <span className="block">Революційний підхід до</span>
-              <span className="block">усунення провисання шкіри</span>
-              <span className="block">на&nbsp;першопричинному рівні</span>
+            <h1 className="text-[length:var(--fs-h1)] font-medium leading-[1.2] tracking-[-0.012em] text-[var(--text)] text-center lg:text-left lg:leading-[1.08] lg:tracking-[-0.012em]">
+              <span className="block">Для хірургічного підтягування шкіри,</span>
+              <span className="block">інцизії, коагуляції та&nbsp;абляції</span>
+              <span className="block">м&rsquo;яких тканин у&nbsp;відкритих</span>
+              <span className="block">та&nbsp;лапароскопічних процедурах</span>
             </h1>
           </div>
 
@@ -99,10 +115,12 @@ export function Hero() {
           </div>
 
           <div data-rv="stagger" className="relative z-10 flex flex-col items-start gap-[clamp(14px,2.2vh,26px)] [--d:620ms] [--step:120ms]">
-            <p className="max-w-[30ch] text-pretty text-[length:var(--fs-lead)] leading-[1.35] text-[var(--text-muted)] lg:max-w-none">
-              Підтягування шкіри, інцизія, коагуляція
+            <p className="max-w-[34ch] text-pretty text-[length:var(--fs-lead)] leading-[1.35] text-[var(--text-muted)] lg:max-w-none">
+              Революційний комбінований метод RF+
               <br className="hidden lg:inline" />
-              &#32;та&nbsp;абляція м&rsquo;яких тканин
+              &#32;плазмової підтяжки шкіри для&nbsp;контрольованого
+              <br className="hidden lg:inline" />
+              &#32;і&nbsp;безпечного скорочення шкірного лоскуту
             </p>
 
             <a
@@ -119,23 +137,15 @@ export function Hero() {
         {/* Одобрения FDA */}
         <ul
           data-rv="stagger-left"
-          className="grid grid-cols-1 gap-2 pb-[clamp(14px,2.6vh,32px)] sm:gap-3 [--d:1100ms] [--dur:1100ms] [--step:260ms] sm:grid-cols-3 lg:max-w-[760px]"
+          className="grid grid-cols-1 gap-2 pb-[clamp(14px,2.6vh,32px)] sm:gap-3 [--d:1100ms] [--dur:1100ms] [--step:260ms] sm:grid-cols-3 lg:max-w-[900px]"
         >
-          {FDA.map((item) => (
+          {FDA.map((text) => (
             <li
-              key={item.text}
-              className="fda-tile group flex items-center gap-3 rounded-[var(--radius-field)] border border-white/12 bg-[rgb(5_16_38/0.62)] px-3 py-2.5 sm:flex-col sm:items-start sm:gap-[clamp(10px,1.1vw,14px)] sm:p-[clamp(14px,1.3vw,18px)] backdrop-blur-[12px] hover:border-[rgb(0_163_224/0.55)] hover:bg-[rgb(5_16_38/0.8)]"
+              key={text}
+              className="fda-tile group flex items-center gap-3 rounded-[var(--radius-field)] border border-white/12 bg-[rgb(255_255_255/0.06)] px-3 py-2.5 backdrop-blur-[16px] sm:gap-[clamp(10px,1.1vw,14px)] sm:p-[clamp(14px,1.3vw,18px)] hover:border-[rgb(52_211_153/0.45)] hover:bg-[rgb(255_255_255/0.1)]"
             >
-              <Image
-                src={item.icon}
-                alt=""
-                width={56}
-                height={56}
-                unoptimized
-                aria-hidden
-                className="size-9 shrink-0 sm:h-[clamp(38px,3.6vw,50px)] sm:w-[clamp(38px,3.6vw,50px)] transition-transform duration-[520ms] ease-[var(--ease)] group-hover:scale-105"
-              />
-              <p className="text-[length:var(--fs-body)] leading-[1.35] tracking-[-0.02em] text-[var(--text)]">{item.text}</p>
+              <Check />
+              <p className="text-[length:var(--fs-body)] leading-[1.35] tracking-[-0.01em] text-[var(--text)]">{text}</p>
             </li>
           ))}
         </ul>

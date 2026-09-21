@@ -96,8 +96,12 @@ export default function Home() {
         <Generator />
         <Applications />
         <Liposuction />
-        <HowItWorks />
         <Comparison />
+        {/*
+          Блок про механизм стоит после таблицы сравнения: это её продолжение,
+          а не отдельная тема. Правка клиента от 21.09.
+        */}
+        <HowItWorks />
         <Calculator />
         <Studies />
         <Club />

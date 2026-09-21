@@ -138,7 +138,7 @@ html.is-loading {
    * поэтому шире 1440 текст не раздувается, а уже — плавно сжимается.
    */
   :root {
-    --fs-h1: clamp(24px, 3.76vw, 54px);
+    --fs-h1: clamp(24px, 3.2vw, 46px);
     --fs-h2: clamp(24px, 3.34vw, 48px);
     --fs-h3: clamp(20px, 2.3vw, 33px);
     --fs-display: clamp(56px, 7.8vw, 112px);
