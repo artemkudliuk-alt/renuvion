@@ -13,8 +13,9 @@ const SURGEONS = [
   },
   { name: "Д-р Сергій Дербак", note: "Україна — пластичний реконструктивний хірург", img: "/screens/s11-derbak-v4.jpg" },
   { name: "Д-р Олександр Бебих", note: "Україна", img: "/screens/s11-bebykh-v4.jpg" },
-  { name: "Д-р Ганна Бродська", note: "Україна", img: "/screens/s11-brodska-v4.jpg" },
-  { name: "Д-р Віктор Чепесюк", note: "Україна", img: "/screens/s11-chepesiuk-v4.jpg" },
+  { name: "Д-р Ганна Бродська", note: "Україна", img: "/screens/s11-brodska-v5.jpg" },
+  { name: "Д-р Віктор Чепесюк", note: "Україна", img: "/screens/s11-chepesiuk-v5.jpg" },
+  { name: "Д-р Костянтин Гержик", note: "Україна", img: "/screens/s11-herzhyk.jpg" },
 ];
 
 const BULLETS = [

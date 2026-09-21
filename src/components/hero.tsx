@@ -84,10 +84,9 @@ export function Hero() {
             </p>
 
             <h1 className="text-[length:var(--fs-h1)] font-medium leading-[1.2] tracking-[-0.012em] text-[var(--text)] text-center lg:text-left lg:leading-[1.08] lg:tracking-[-0.012em]">
-              <span className="block">Для хірургічного підтягування шкіри,</span>
-              <span className="block">інцизії, коагуляції та&nbsp;абляції</span>
-              <span className="block">м&rsquo;яких тканин у&nbsp;відкритих</span>
-              <span className="block">та&nbsp;лапароскопічних процедурах</span>
+              <span className="block">Для хірургічного</span>
+              <span className="block">підтягування шкіри,</span>
+              <span className="block">інцизії та&nbsp;коагуляції</span>
             </h1>
           </div>
 
@@ -116,9 +115,7 @@ export function Hero() {
 
           <div data-rv="stagger" className="relative z-10 flex flex-col items-start gap-[clamp(14px,2.2vh,26px)] [--d:620ms] [--step:120ms]">
             <p className="max-w-[34ch] text-pretty text-[length:var(--fs-lead)] leading-[1.35] text-[var(--text-muted)] lg:max-w-none">
-              Революційний комбінований метод RF+
-              <br className="hidden lg:inline" />
-              &#32;плазмової підтяжки шкіри для&nbsp;контрольованого
+              Революційний комбінований метод контрольованого
               <br className="hidden lg:inline" />
               &#32;і&nbsp;безпечного скорочення шкірного лоскуту
             </p>
@@ -137,7 +134,7 @@ export function Hero() {
         {/* Одобрения FDA */}
         <ul
           data-rv="stagger-left"
-          className="grid grid-cols-1 gap-2 pb-[clamp(14px,2.6vh,32px)] sm:gap-3 [--d:1100ms] [--dur:1100ms] [--step:260ms] sm:grid-cols-3 lg:max-w-[900px]"
+          className="grid grid-cols-1 gap-2 pb-[clamp(20px,4.3vh,48px)] sm:gap-3 [--d:1100ms] [--dur:1100ms] [--step:260ms] sm:grid-cols-3 lg:max-w-[900px]"
         >
           {FDA.map((text) => (
             <li
