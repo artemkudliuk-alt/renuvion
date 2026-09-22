@@ -40,7 +40,7 @@ export function Footer() {
               href="#contact"
               className="btn mt-1 inline-flex min-h-11 items-center gap-3 rounded-[var(--radius-pill)] bg-[var(--accent)] px-[clamp(20px,2.2vw,32px)] py-[clamp(13px,1.25vw,18px)] text-[length:var(--fs-body)] font-medium text-[var(--on-accent)] transition-colors duration-[500ms] ease-[var(--ease)] hover:bg-white"
             >
-              Замовити тест-драйв
+              Отримати презентацію
               <svg viewBox="0 0 24 24" className="size-5 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
                 <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
