@@ -4,18 +4,19 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 
 const SURGEONS = [
-  { name: "Д-р Альфредо Ойос", note: "Колумбія — піонер High Definition скульптурування тіла", img: "/screens/s11-hoyos-v4.jpg" },
-  { name: "Д-р Жорді Мір Батлле", note: "Іспанія", img: "/screens/s11-mir-v4.jpg" },
+  { name: "Д-р Альфредо Ойос", note: "Колумбія — піонер High Definition скульптурування тіла", img: "/screens/s11-hoyos-u.jpg" },
+  { name: "Д-р Жорді Мір Батлле", note: "Іспанія", img: "/screens/s11-mir-u.jpg" },
   {
     name: "Д-р Едвард М. Ціммерман",
     note: "США — президент American Board of Laser Surgery",
-    img: "/screens/s11-zimmerman-v4.jpg",
+    img: "/screens/s11-zimmerman-u.jpg",
   },
-  { name: "Д-р Сергій Дербак", note: "Україна — пластичний реконструктивний хірург", img: "/screens/s11-derbak-v4.jpg" },
-  { name: "Д-р Олександр Бебих", note: "Україна", img: "/screens/s11-bebykh-v4.jpg" },
-  { name: "Д-р Ганна Бродська", note: "Україна", img: "/screens/s11-brodska-v5.jpg" },
-  { name: "Д-р Віктор Чепесюк", note: "Україна", img: "/screens/s11-chepesiuk-v5.jpg" },
-  { name: "Д-р Костянтин Гержик", note: "Україна", img: "/screens/s11-herzhyk.jpg" },
+  // украинские хирурги — по алфавиту, после международного блока
+  { name: "Д-р Олександр Бебих", note: "Україна", img: "/screens/s11-bebykh-u.jpg" },
+  { name: "Д-р Анна Бродська", note: "Україна", img: "/screens/s11-brodska-u.jpg" },
+  { name: "Д-р Костянтин Гержик", note: "Україна", img: "/screens/s11-herzhyk-u.jpg" },
+  { name: "Д-р Сергій Дербак", note: "Україна — пластичний реконструктивний хірург", img: "/screens/s11-derbak-u.jpg" },
+  { name: "Д-р Віктор Чепесюк", note: "Україна", img: "/screens/s11-chepesiuk-u.jpg" },
 ];
 
 const BULLETS = [
